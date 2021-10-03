@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tests_Generator_lab4_
 {
-    class Program
+    public class Pipeline
     {
-        static void Main(string[] args)
-        {
-
-        }
     }
 }

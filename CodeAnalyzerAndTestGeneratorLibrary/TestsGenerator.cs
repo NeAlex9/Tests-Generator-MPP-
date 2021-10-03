@@ -4,13 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tests_Generator_lab4_
+namespace CodeAnalyzerAndTestGeneratorLibrary
 {
-    class Program
+    public class TestsGenerator
     {
-        static void Main(string[] args)
-        {
-
-        }
     }
 }
