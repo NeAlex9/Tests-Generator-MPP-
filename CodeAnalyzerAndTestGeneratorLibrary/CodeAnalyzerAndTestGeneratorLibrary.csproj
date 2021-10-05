@@ -47,14 +47,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="CodeAnalyzer.cs" />
+    <Compile Include="FileInfoStructure\ClassInfo.cs" />
+    <Compile Include="FileInfoStructure\FileInfo.cs" />
+    <Compile Include="FileInfoStructure\MethodInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestsGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
