@@ -4,9 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeAnalyzerAndTestGeneratorLibrary.FileHolder
+namespace CodeAnalyzerAndTestGeneratorLibrary.FileInfoStructure
 {
     public class MethodInfo
     {
+        public string Name { get; private set; }
+
+        public MethodInfo(string name)
+        {
+            this.Name = name;
+        }
     }
 }

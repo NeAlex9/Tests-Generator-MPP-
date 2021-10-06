@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace CodeAnalyzerAndTestGeneratorLibrary.FileHolder
+namespace CodeAnalyzerAndTestGeneratorLibrary.FileInfoStructure
 {
     public class ClassInfo
     {
+        public List<MethodInfo> Methods { get; private set; }
+        public string ClassName{ get; private set; }
+
+        public ClassInfo(List<MethodInfo> methods, string className)
+        {
+            this.Methods = methods;
+            this.ClassName = className;
+        }
     }
 }
