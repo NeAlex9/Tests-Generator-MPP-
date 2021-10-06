@@ -14,7 +14,7 @@ namespace Tests_Generator_lab4_
             var pathToFolder = @"..\..\FilesForTests";
             var filesName = new string[] { "Example1.cs", "Example3.cs"};
             var destPath = @"..\..\GeneratedFiles";
-            var t = Task.Run(async ()=> await new Pipeline().Generate(pathToFolder, filesName, destPath, 1));
+            var t = Task.Run(async ()=> await new Pipeline().Generate(pathToFolder, filesName, destPath, 2));
             Console.ReadLine();
         }
     }

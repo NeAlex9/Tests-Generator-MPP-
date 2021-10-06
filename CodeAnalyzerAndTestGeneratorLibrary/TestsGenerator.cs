@@ -18,7 +18,8 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
         private static readonly SyntaxToken StaticKeyword;
         private static readonly TypeSyntax VoidReturnType;
         private static readonly AttributeSyntax SetupAttribute;
-        private static readonly AttributeSyntax TestAttribute;
+        private static readonly AttributeSyntax MethodAttribute;
+        private static readonly AttributeSyntax ClassAttribute;
         private static readonly ExpressionStatementSyntax FailExpression;
 
         static TestsGenerator()
@@ -28,7 +29,8 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
             StaticKeyword = SyntaxFactory.Token(SyntaxKind.StaticKeyword);
             VoidReturnType = SyntaxFactory.ParseTypeName("void");
             SetupAttribute = SyntaxFactory.Attribute(SyntaxFactory.ParseName("SetUp"));
-            TestAttribute = SyntaxFactory.Attribute(SyntaxFactory.ParseName("Test"));
+            MethodAttribute = SyntaxFactory.Attribute(SyntaxFactory.ParseName("Test"));
+            ClassAttribute = SyntaxFactory.Attribute(SyntaxFactory.ParseName("TestFixture"));
             FailExpression = CreateFailExpression();
         }
 
@@ -76,7 +78,7 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
 
             return SyntaxFactory.ClassDeclaration(classInfo.ClassName)
                 .AddMembers(methods.ToArray())
-                .AddAttributeLists(SyntaxFactory.AttributeList(SyntaxFactory.AttributeList().Attributes.Add(TestAttribute)));
+                .AddAttributeLists(SyntaxFactory.AttributeList(SyntaxFactory.AttributeList().Attributes.Add(ClassAttribute)));
         }
 
         private static MethodDeclarationSyntax GenerateMethod(MethodInfo methodInfo)
@@ -85,6 +87,7 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
             actAssertBody.Add(FailExpression);
             return SyntaxFactory.MethodDeclaration(VoidReturnType, methodInfo.Name)
                 .AddModifiers(PublicModifier)
+                .AddAttributeLists(SyntaxFactory.AttributeList(SyntaxFactory.AttributeList().Attributes.Add(MethodAttribute)))
                 .WithBody(SyntaxFactory.Block(actAssertBody)); ;
         }
     }

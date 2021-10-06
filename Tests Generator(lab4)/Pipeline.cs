@@ -48,8 +48,8 @@ namespace Tests_Generator_lab4_
                 execOptions
             );
 
-            downloadStringBlock.LinkTo(generateTestsBlock);
-            generateTestsBlock.LinkTo(writeFileBlock);
+            downloadStringBlock.LinkTo(generateTestsBlock, linkOptions);
+            generateTestsBlock.LinkTo(writeFileBlock, linkOptions);
             foreach (var fileName in fileNames)
             {
                 downloadStringBlock.Post(sourcePath + @"\" + fileName);
