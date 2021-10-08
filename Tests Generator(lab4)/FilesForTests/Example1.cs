@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CodeAnalyzerAndTestGeneratorLibrary.FilesForTests
+namespace Tests_Generator_lab4_.FilesForTests
 {
     public class Example1
     {
         public IEnumerable<int> Interface { get; private set; }
+
+        public Example1(IDisposable s){}
 
         public void Function1(){}
         public void Function2(){}

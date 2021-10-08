@@ -6,15 +6,13 @@ using System.Threading.Tasks;
 
 namespace CodeAnalyzerAndTestGeneratorLibrary.FileInfoStructure
 {
-    public class MethodInfo
+    public class ConstructorInfo
     {
         public string Name { get; private set; }
         public Dictionary<string, string> Parameters { get; private set; }
-        public string ReturnType { get; private set; }
 
-        public MethodInfo(Dictionary<string, string> parameters, string name, string returnType)
+        public ConstructorInfo(Dictionary<string, string> parameters, string name)
         {
-            this.ReturnType = returnType;
             this.Name = name;
             this.Parameters = parameters;
         }

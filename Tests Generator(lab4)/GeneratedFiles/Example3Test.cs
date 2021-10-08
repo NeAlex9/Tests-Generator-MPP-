@@ -4,6 +4,8 @@ using NUnit.Framework;
 [TestFixture]
 class Example3
 {
+    private Mock<IEnumerable<int>> _d;
+    private Example3 _example3;
     [Test]
     public void Function1()
     {

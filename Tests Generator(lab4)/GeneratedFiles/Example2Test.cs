@@ -4,6 +4,7 @@ using NUnit.Framework;
 [TestFixture]
 class Example2
 {
+    private Example2 _example2;
     [Test]
     public void Function1()
     {

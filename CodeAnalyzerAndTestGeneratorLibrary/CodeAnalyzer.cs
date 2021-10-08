@@ -23,6 +23,28 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
             return new FileInfo(classes);
         }
 
+        private static MethodInfo GetMethodInfo(MethodDeclarationSyntax method)
+        {
+            var parameters = new Dictionary<string, string>();
+            foreach (var parameter in method.ParameterList.Parameters)
+            {
+                parameters.Add(parameter.Identifier.Text, parameter.Type.ToString());
+            }
+
+            return new MethodInfo(parameters, method.Identifier.ValueText, method.ReturnType.ToString());
+        }
+
+        private static ConstructorInfo GetConstructorInfo(ConstructorDeclarationSyntax constructor)
+        {
+            var parameters = new Dictionary<string, string>();
+            foreach (var parameter in constructor.ParameterList.Parameters)
+            {
+                parameters.Add(parameter.Identifier.Text, parameter.Type.ToString());
+            }
+
+            return new ConstructorInfo(parameters, constructor.Identifier.ValueText);
+        }
+
         public static ClassInfo GetClassInfo(ClassDeclarationSyntax classDeclaration)
         {
             var methods = new List<MethodInfo>();
@@ -31,12 +53,13 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
                 methods.Add(GetMethodInfo(method));
             }
 
-            return new ClassInfo(methods, classDeclaration.Identifier.ValueText);
-        }
+            var constructors = new List<ConstructorInfo>();
+            foreach (var constrctor in classDeclaration.DescendantNodes().OfType<ConstructorDeclarationSyntax>().Where((constructorDeclaration) => constructorDeclaration.Modifiers.Any((modifier) => modifier.IsKind(SyntaxKind.PublicKeyword))))
+            {
+                constructors.Add(GetConstructorInfo(constrctor));
+            }
 
-        public static MethodInfo GetMethodInfo(MethodDeclarationSyntax method)
-        {
-            return new MethodInfo(method.Identifier.ValueText);
+            return new ClassInfo(methods, constructors, classDeclaration.Identifier.ValueText);
         }
     }
 }

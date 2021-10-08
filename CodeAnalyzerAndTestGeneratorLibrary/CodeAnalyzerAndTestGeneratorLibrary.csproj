@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="CodeAnalyzer.cs" />
     <Compile Include="FileInfoStructure\ClassInfo.cs" />
+    <Compile Include="FileInfoStructure\ConstructorInfo.cs" />
     <Compile Include="FileInfoStructure\FileInfo.cs" />
     <Compile Include="FileInfoStructure\MethodInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
