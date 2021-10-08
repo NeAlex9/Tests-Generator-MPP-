@@ -7,7 +7,7 @@ namespace Tests_Generator_lab4_.FilesForTests
     {
         public IEnumerable<int> Interface { get; private set; }
 
-        public Example1(IDisposable s){}
+        public Example1(IDisposable s, int a, string str){}
 
         public void Function1(){}
         public void Function2(){}

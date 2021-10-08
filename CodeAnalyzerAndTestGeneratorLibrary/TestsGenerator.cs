@@ -19,7 +19,6 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
         private static readonly TypeSyntax VoidReturnType;
         private static readonly AttributeSyntax SetupAttribute;
         private static readonly AttributeSyntax MethodAttribute;
-        private static readonly AttributeSyntax SetUpAttribute;
         private static readonly AttributeSyntax ClassAttribute;
         private static readonly ExpressionStatementSyntax FailExpression;
 
@@ -83,26 +82,72 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
             return constructor;
         }
 
+        private static Dictionary<string, string> GetBaseTypeVariables(Dictionary<string, string> parameters)
+        {
+            var res = new Dictionary<string, string>();
+            foreach (var parameter in parameters)
+            {
+                if (parameter.Value[0] != 'I')
+                {
+                    res.Add(parameter.Key, parameter.Value);
+                }
+            }
+
+            return res;
+        }
+
+        private static Dictionary<string, string> GetCustomTypeVariables(Dictionary<string, string> parameters)
+        {
+            var res = new Dictionary<string, string>();
+            foreach (var parameter in parameters)
+            {
+                if (parameter.Value[0] == 'I')
+                {
+                    res.Add(parameter.Key, parameter.Value);
+                }
+            }
+
+            return res;
+        }
+
+        private static string ConvertParametersToStringRepresentation(Dictionary<string, string>  parameters)
+        {
+            var builder = new StringBuilder();
+            foreach (var pair in parameters)
+            {
+                builder.Append(pair.Key);
+                builder.Append(", ");
+            }
+
+            return builder.ToString().Length > 0 ? builder.ToString().Remove(builder.ToString().Length - 2, 2) : "";
+        }
+
+        private static string GetCheckedClassVariable(string className)
+        {
+            return "_" + className[0].ToString().ToLower() + className.Remove(0, 1);
+        }
+
         private static ClassDeclarationSyntax GenerateClass(ClassInfo classInfo)
         {
             var fields = new List<FieldDeclarationSyntax>();
             VariableDeclarationSyntax variable;
+            var interfaces = new Dictionary<string, string>();
+            ConstructorInfo constructor = null;
             if (classInfo.Constructors.Count > 0)
             {
-                var constructor = FindConstructorWithLargestNumOfParams(classInfo.Constructors);
-                foreach (var parameter in constructor.Parameters)
+                constructor = FindConstructorWithLargestNumOfParams(classInfo.Constructors);
+                interfaces = GetCustomTypeVariables(constructor.Parameters);
+                foreach (var custom in interfaces)
                 {
-                    if (parameter.Value[0] == 'I')
-                    {
-                        variable = GenerateVariable("_" + parameter.Key, $"Mock<{parameter.Value}>");
-                        fields.Add(GenerateField(variable));
-                    }
+                    variable = GenerateVariable("_" + custom.Key, $"Mock<{custom.Value}>");
+                    fields.Add(GenerateField(variable));
                 }
             }
 
-            variable = GenerateVariable("_" + classInfo.ClassName[0].ToString().ToLower() + classInfo.ClassName.Remove(0,1), classInfo.ClassName);
+            variable = GenerateVariable(GetCheckedClassVariable(classInfo.ClassName), classInfo.ClassName);
             fields.Add(GenerateField(variable));
             var methods = new List<MethodDeclarationSyntax>();
+            methods.Add(GenerateSetUpMethod(constructor, classInfo.ClassName));
             foreach (var methodInfo in classInfo.Methods)
             {
                 methods.Add(GenerateMethod(methodInfo));
@@ -124,13 +169,13 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
             ));
         }
 
-        private static StatementSyntax GenerateCustomsTypesAssignStatement(string varName, string variable, string constructorName, string invokeArgs = "")
+        private static StatementSyntax GenerateCustomsTypesAssignStatement(string varName, string constructorName, string invokeArgs = "")
         {
             return SyntaxFactory.ParseStatement(string.Format
             (
                 "{0} = new {1}{2};",
                 varName,
-                variable,
+                constructorName,
                 $"({invokeArgs})"
             ));
         }
@@ -147,28 +192,47 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword));
         }
 
-        private static List<StatementSyntax> GenerateArrangePart()
+        private static void GenerateArrangePart(List<StatementSyntax> body, Dictionary<string, string> parameters)
+        {
+            var baseTypeVars = GetBaseTypeVariables(parameters);
+            foreach (var var in baseTypeVars)
+            {
+                body.Add(GenerateBasesTypesAssignStatement(var.Key, var.Value));
+            }
+        }
+
+        private static void GenerateActPart()
         {
             throw new NotImplementedException();
         }
 
-        private static List<StatementSyntax> GenerateActPart()
+        private static void GenerateAssertPart()
         {
             throw new NotImplementedException();
         }
 
-        private static List<StatementSyntax> GenerateAssertPart()
-        {
-            throw new NotImplementedException();
-        }
-
-        private static MethodDeclarationSyntax GenerateSetUpMethod(ConstructorInfo constructorInfo, Type className)
+        private static MethodDeclarationSyntax GenerateSetUpMethod(ConstructorInfo constructorInfo, string className)
         {
             List<StatementSyntax> body = new List<StatementSyntax>();
+            if (constructorInfo != null)
+            {
+                var baseTypeVars = GetBaseTypeVariables(constructorInfo.Parameters);
+                foreach (var var in baseTypeVars)
+                {
+                    body.Add(GenerateBasesTypesAssignStatement(var.Key, var.Value));
+                }
 
+                var customVars = GetCustomTypeVariables(constructorInfo.Parameters);
+                foreach (var var in customVars)
+                {
+                    body.Add(GenerateCustomsTypesAssignStatement(var.Key, var.Value, ""));
+                }
+            }
+
+            body.Add(GenerateCustomsTypesAssignStatement(GetCheckedClassVariable(className), className, constructorInfo != null ? ConvertParametersToStringRepresentation(constructorInfo.Parameters) : ""));
             return SyntaxFactory.MethodDeclaration(VoidReturnType, "SetUp")
                 .AddModifiers(PublicModifier)
-                .AddAttributeLists(SyntaxFactory.AttributeList(SyntaxFactory.AttributeList().Attributes.Add(SetUpAttribute)))
+                .AddAttributeLists(SyntaxFactory.AttributeList(SyntaxFactory.AttributeList().Attributes.Add(SetupAttribute)))
                 .WithBody(SyntaxFactory.Block(body)); ;
         }
 

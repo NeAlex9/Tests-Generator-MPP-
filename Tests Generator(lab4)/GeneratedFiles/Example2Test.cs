@@ -5,6 +5,12 @@ using NUnit.Framework;
 class Example2
 {
     private Example2 _example2;
+    [SetUp]
+    public void SetUp()
+    {
+        _example2 = new Example2();
+    }
+
     [Test]
     public void Function1()
     {

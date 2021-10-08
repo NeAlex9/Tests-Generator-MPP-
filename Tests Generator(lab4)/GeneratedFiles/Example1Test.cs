@@ -6,6 +6,15 @@ class Example1
 {
     private Mock<IDisposable> _s;
     private Example1 _example1;
+    [SetUp]
+    public void SetUp()
+    {
+        var a = default (int);
+        var str = default (string);
+        s = new IDisposable();
+        _example1 = new Example1(s, a, str);
+    }
+
     [Test]
     public void Function1()
     {

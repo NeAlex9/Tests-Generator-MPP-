@@ -6,6 +6,13 @@ class Example3
 {
     private Mock<IEnumerable<int>> _d;
     private Example3 _example3;
+    [SetUp]
+    public void SetUp()
+    {
+        d = new IEnumerable<int>();
+        _example3 = new Example3(d);
+    }
+
     [Test]
     public void Function1()
     {
