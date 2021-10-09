@@ -9,7 +9,9 @@ namespace Tests_Generator_lab4_.FilesForTests
 
         public Example1(IDisposable s, int a, string str){}
 
-        public void Function1(){}
+        public int Function1(int d, int e)
+        {
+            return 0;}
         public void Function2(){}
     }
 

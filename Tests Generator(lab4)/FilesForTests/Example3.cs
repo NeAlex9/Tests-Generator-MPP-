@@ -11,7 +11,7 @@ namespace CodeAnalyzerAndTestGeneratorLibrary.FilesForTests
         public IEnumerable<int> Interface { get; private set; }
 
         public Example3(IEnumerable<int> d){}
-        public void Function1(){}
+        public void Function1(int a, string b){}
         public void Function2(){}
     }
 

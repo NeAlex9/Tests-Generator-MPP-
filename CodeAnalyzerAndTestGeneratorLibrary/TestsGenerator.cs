@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using System.Text;
 using System.Threading.Tasks;
 using CodeAnalyzerAndTestGeneratorLibrary.FileHolder;
@@ -8,6 +10,8 @@ using CodeAnalyzerAndTestGeneratorLibrary.FileInfoStructure;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using ConstructorInfo = CodeAnalyzerAndTestGeneratorLibrary.FileInfoStructure.ConstructorInfo;
+using MethodInfo = CodeAnalyzerAndTestGeneratorLibrary.FileInfoStructure.MethodInfo;
 
 namespace CodeAnalyzerAndTestGeneratorLibrary
 {
@@ -110,7 +114,7 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
             return res;
         }
 
-        private static string ConvertParametersToStringRepresentation(Dictionary<string, string>  parameters)
+        private static string ConvertParametersToStringRepresentation(Dictionary<string, string> parameters)
         {
             var builder = new StringBuilder();
             foreach (var pair in parameters)
@@ -180,6 +184,27 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
             ));
         }
 
+        private static StatementSyntax GenerateFunctionCall(string varName, string funcName, string invokeArgs = "")
+        {
+            return SyntaxFactory.ParseStatement(string.Format
+            (
+                "var {0} = {1}{2};",
+                varName,
+                funcName,
+                $"({invokeArgs})"
+            ));
+        }
+
+        private static StatementSyntax GenerateVoidFunctionCall(string funcName, string invokeArgs = "")
+        {
+            return SyntaxFactory.ParseStatement(string.Format
+            (
+                "{0}{1};",
+                funcName,
+                $"({invokeArgs})"
+            ));
+        }
+       
         private static VariableDeclarationSyntax GenerateVariable(string varName, string typeName)
         {
             return SyntaxFactory.VariableDeclaration(SyntaxFactory.ParseTypeName(typeName))
@@ -201,14 +226,42 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
             }
         }
 
-        private static void GenerateActPart()
+        private static void GenerateActPart(List<StatementSyntax> body, MethodInfo methodInfo)
         {
-            throw new NotImplementedException();
+            if (methodInfo.ReturnType != "void")
+            {
+                body.Add(GenerateFunctionCall("actual", methodInfo.Name, ConvertParametersToStringRepresentation(methodInfo.Parameters)));
+            }
+            else
+            {
+                body.Add(GenerateVoidFunctionCall(methodInfo.Name, ConvertParametersToStringRepresentation(methodInfo.Parameters)));
+            }
         }
 
-        private static void GenerateAssertPart()
+        private static InvocationExpressionSyntax GenerateExpression(string firstCall, string secondCall)
         {
-            throw new NotImplementedException();
+            return SyntaxFactory.InvocationExpression(
+                       SyntaxFactory.MemberAccessExpression(
+                           SyntaxKind.SimpleMemberAccessExpression,
+                           SyntaxFactory.IdentifierName(firstCall),
+                           SyntaxFactory.IdentifierName(secondCall)));
+        }
+
+        private static void GenerateAssertPart(List<StatementSyntax> body, string returnType)
+        {
+            body.Add(GenerateBasesTypesAssignStatement("expected", returnType));
+            var invocationExpression = GenerateExpression("Assert", "That");
+            var secondPart = GenerateExpression("Is", "EqualTo").WithArgumentList(ArgumentList(SyntaxFactory.SeparatedList<ArgumentSyntax>(
+                new SyntaxNodeOrToken[] {
+                    SyntaxFactory.Argument(SyntaxFactory.IdentifierName("expected"))})));
+            var argList = SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList<ArgumentSyntax>(
+                new SyntaxNodeOrToken[] {
+                    SyntaxFactory.Argument(SyntaxFactory.IdentifierName("actual")),
+                    SyntaxFactory.Token(SyntaxKind.CommaToken),
+                    SyntaxFactory.Argument(SyntaxFactory.IdentifierName(secondPart.ToString()))}));
+
+            var s = ExpressionStatement(invocationExpression.WithArgumentList(argList));
+            body.Add(s);
         }
 
         private static MethodDeclarationSyntax GenerateSetUpMethod(ConstructorInfo constructorInfo, string className)
@@ -238,12 +291,19 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
 
         private static MethodDeclarationSyntax GenerateMethod(MethodInfo methodInfo)
         {
-            List<StatementSyntax> actAssertBody = new List<StatementSyntax>();
-            actAssertBody.Add(FailExpression);
+            List<StatementSyntax> body = new List<StatementSyntax>();
+            GenerateArrangePart(body, methodInfo.Parameters);
+            GenerateActPart(body, methodInfo);
+            if (methodInfo.ReturnType != "void")
+            {
+                GenerateAssertPart(body, methodInfo.ReturnType);
+            }
+
+            body.Add(FailExpression);
             return SyntaxFactory.MethodDeclaration(VoidReturnType, methodInfo.Name)
                 .AddModifiers(PublicModifier)
                 .AddAttributeLists(SyntaxFactory.AttributeList(SyntaxFactory.AttributeList().Attributes.Add(MethodAttribute)))
-                .WithBody(SyntaxFactory.Block(actAssertBody)); ;
+                .WithBody(SyntaxFactory.Block(body)); ;
         }
     }
 }
