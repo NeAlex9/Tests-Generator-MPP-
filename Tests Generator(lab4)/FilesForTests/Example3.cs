@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeAnalyzerAndTestGeneratorLibrary.FilesForTests
-{
     public class Example3
     {
         public IEnumerable<int> Interface { get; private set; }
@@ -14,5 +12,3 @@ namespace CodeAnalyzerAndTestGeneratorLibrary.FilesForTests
         public void Function1(int a, string b){}
         public void Function2(){}
     }
-
-}

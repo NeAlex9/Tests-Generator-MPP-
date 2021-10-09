@@ -47,6 +47,8 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
                 var compilationUnit = SyntaxFactory.CompilationUnit()
                     .AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System")))
                     .AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("NUnit.Framework")))
+                    .AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("Moq")))
+                    .AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Collections.Generic")))
                     .AddMembers(classDeclaration);
                 fileNameCode.Add(classInfo.ClassName + "Test",
                     compilationUnit.NormalizeWhitespace().ToFullString());
@@ -116,14 +118,14 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
 
         private static string ConvertParametersToStringRepresentation(Dictionary<string, string> parameters)
         {
-            var builder = new StringBuilder();
+            var s = "";
             foreach (var pair in parameters)
             {
-                builder.Append(pair.Key);
-                builder.Append(", ");
+               s += pair.Value[0] == 'I' ? $"_{pair.Key}.Object" : $"{pair.Key}";
+            s += ", ";
             }
 
-            return builder.ToString().Length > 0 ? builder.ToString().Remove(builder.ToString().Length - 2, 2) : "";
+            return s.Length > 0 ? s.Remove(s.Length - 2, 2) : "";
         }
 
         private static string GetCheckedClassVariable(string className)
@@ -154,10 +156,10 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
             methods.Add(GenerateSetUpMethod(constructor, classInfo.ClassName));
             foreach (var methodInfo in classInfo.Methods)
             {
-                methods.Add(GenerateMethod(methodInfo));
+                methods.Add(GenerateMethod(methodInfo, classInfo.ClassName));
             }
 
-            return SyntaxFactory.ClassDeclaration(classInfo.ClassName)
+            return SyntaxFactory.ClassDeclaration(classInfo.ClassName + "Test")
                 .AddMembers(fields.ToArray())
                 .AddMembers(methods.ToArray())
                 .AddAttributeLists(SyntaxFactory.AttributeList(SyntaxFactory.AttributeList().Attributes.Add(ClassAttribute)));
@@ -226,15 +228,15 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
             }
         }
 
-        private static void GenerateActPart(List<StatementSyntax> body, MethodInfo methodInfo)
+        private static void GenerateActPart(List<StatementSyntax> body, MethodInfo methodInfo, string checkedClassVariable)
         {
             if (methodInfo.ReturnType != "void")
             {
-                body.Add(GenerateFunctionCall("actual", methodInfo.Name, ConvertParametersToStringRepresentation(methodInfo.Parameters)));
+                body.Add(GenerateFunctionCall("actual", GetCheckedClassVariable(checkedClassVariable) + "." + methodInfo.Name, ConvertParametersToStringRepresentation(methodInfo.Parameters)));
             }
             else
             {
-                body.Add(GenerateVoidFunctionCall(methodInfo.Name, ConvertParametersToStringRepresentation(methodInfo.Parameters)));
+                body.Add(GenerateVoidFunctionCall(GetCheckedClassVariable(checkedClassVariable) + "." + methodInfo.Name, ConvertParametersToStringRepresentation(methodInfo.Parameters)));
             }
         }
 
@@ -278,7 +280,7 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
                 var customVars = GetCustomTypeVariables(constructorInfo.Parameters);
                 foreach (var var in customVars)
                 {
-                    body.Add(GenerateCustomsTypesAssignStatement(var.Key, var.Value, ""));
+                    body.Add(GenerateCustomsTypesAssignStatement("_" + var.Key, $"Mock<{var.Value}>", ""));
                 }
             }
 
@@ -289,11 +291,11 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
                 .WithBody(SyntaxFactory.Block(body)); ;
         }
 
-        private static MethodDeclarationSyntax GenerateMethod(MethodInfo methodInfo)
+        private static MethodDeclarationSyntax GenerateMethod(MethodInfo methodInfo, string checkedClassVar)
         {
             List<StatementSyntax> body = new List<StatementSyntax>();
             GenerateArrangePart(body, methodInfo.Parameters);
-            GenerateActPart(body, methodInfo);
+            GenerateActPart(body, methodInfo, checkedClassVar);
             if (methodInfo.ReturnType != "void")
             {
                 GenerateAssertPart(body, methodInfo.ReturnType);
