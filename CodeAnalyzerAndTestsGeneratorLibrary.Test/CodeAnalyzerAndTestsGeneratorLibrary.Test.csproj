@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="CodeAnalyzerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestGeneratorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
