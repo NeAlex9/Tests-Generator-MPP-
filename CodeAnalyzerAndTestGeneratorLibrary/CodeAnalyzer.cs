@@ -45,7 +45,7 @@ namespace CodeAnalyzerAndTestGeneratorLibrary
             return new ConstructorInfo(parameters, constructor.Identifier.ValueText);
         }
 
-        public static ClassInfo GetClassInfo(ClassDeclarationSyntax classDeclaration)
+        private static ClassInfo GetClassInfo(ClassDeclarationSyntax classDeclaration)
         {
             var methods = new List<MethodInfo>();
             foreach (var method in classDeclaration.DescendantNodes().OfType<MethodDeclarationSyntax>().Where((methodDeclaration) => methodDeclaration.Modifiers.Any((modifier) => modifier.IsKind(SyntaxKind.PublicKeyword))))
