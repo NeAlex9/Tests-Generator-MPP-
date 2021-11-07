@@ -1,0 +1,26 @@
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\Tests Generator(lab4).exe.config
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\Tests Generator(lab4).exe
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\Tests Generator(lab4).pdb
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\CodeAnalyzerAndTestGeneratorLibrary.dll
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\nunit.framework.dll
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\System.Threading.Tasks.Dataflow.dll
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\Microsoft.CodeAnalysis.CSharp.dll
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\Microsoft.CodeAnalysis.dll
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\System.Collections.Immutable.dll
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\System.Reflection.Metadata.dll
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\CodeAnalyzerAndTestGeneratorLibrary.pdb
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\nunit.framework.xml
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\System.Threading.Tasks.Dataflow.xml
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\obj\Debug\Tests Generator(lab4).csproj.AssemblyReference.cache
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\obj\Debug\Tests Generator(lab4).csproj.CoreCompileInputs.cache
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\obj\Debug\Tests Generator(lab4).csproj.CopyComplete
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\obj\Debug\Tests Generator(lab4).exe
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\obj\Debug\Tests Generator(lab4).pdb
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\Castle.Core.dll
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\Moq.dll
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\System.Threading.Tasks.Extensions.dll
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\Castle.Core.xml
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\Moq.xml
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+B:\BSUIR\3 course\5 sem\СПП\lab\Tests Generator(lab4)\Tests Generator(lab4)\bin\Debug\System.Threading.Tasks.Extensions.xml
