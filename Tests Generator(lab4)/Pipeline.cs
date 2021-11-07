@@ -40,6 +40,7 @@ namespace Tests_Generator_lab4_
             (
                 async fileNameCodePair =>
                 {
+
                     using (var writer = new StreamWriter(destinationPath + '\\' + fileNameCodePair.Key + ".cs"))
                     {
                         await writer.WriteAsync(fileNameCodePair.Value);
